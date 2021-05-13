@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.Arrays;
 
 public class ClientSocket extends Thread{
     private Socket socket;
@@ -29,11 +30,16 @@ public class ClientSocket extends Thread{
         while(true){
             message = readFromSocket.readLine();
             String[] splitMessage = message.split(":");
+            System.out.println(splitMessage.length);
             message = splitMessage[1];
-            if (splitMessage[0].equals("PB")) {
-                System.out.println(message);
+            String[] showSplit = message.split("|");
+            if(showSplit.length > 1){
+                Arrays.stream(showSplit).forEach(System.out::println);
+            } else {
+                if (splitMessage[0].equals("PB")) {
+                    System.out.println(message);
+                }
             }
-
             if(message.equals("AcLvl")){
                 accessLvl = splitMessage[2];
             }

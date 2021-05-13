@@ -117,7 +117,7 @@ public class ServerData extends Thread{
         List<Software> staffList = new SoftwareJdbc().findAll().get();
         String message = staffList.stream()
                 .map(Software::toString)
-                .collect(Collectors.joining("\n"));
+                .collect(Collectors.joining("|"));
         sendMessageForUser(message);
     }
 
@@ -133,7 +133,7 @@ public class ServerData extends Thread{
         List<Staff> staffList = new StaffJdbc().showStaffRelatedToSoftware(Long.parseLong(command[1])).get();
         String message = staffList.stream()
                 .map(Staff::toString)
-                .collect(Collectors.joining("\n"));
+                .collect(Collectors.joining("|"));
         sendMessageForUser(message);
     }
 
