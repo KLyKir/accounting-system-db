@@ -1,7 +1,7 @@
 package server.database.repository.jdbc;
 
 import server.database.repository.ConnectionFactory;
-import server.database.repository.DaoException;
+import server.database.repository.RepositoryException;
 import server.database.repository.StaffRepository;
 import server.database.domain.Staff;
 
@@ -39,7 +39,7 @@ public class StaffJdbc implements StaffRepository {
 
 
     @Override
-    public void create(Staff staff) throws DaoException {
+    public void create(Staff staff) throws RepositoryException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
@@ -50,10 +50,10 @@ public class StaffJdbc implements StaffRepository {
             statement.setLong(3, staff.getSalary());
             statement.setString(4, staff.getWorkPosition());
             if(statement.execute()){
-                throw new DaoException("Staff was not created");
+                throw new RepositoryException("Staff was not created");
             }
-        } catch (SQLException | DaoException e){
-            throw new DaoException(e.getMessage(),e);
+        } catch (SQLException | RepositoryException e){
+            throw new RepositoryException(e.getMessage(),e);
         } finally {
             try {
                 if(connection != null){
@@ -63,13 +63,13 @@ public class StaffJdbc implements StaffRepository {
                     statement.close();
                 }
             }catch (SQLException e){
-                throw new DaoException("Cannot close connection",e);
+                throw new RepositoryException("Cannot close connection",e);
             }
         }
     }
 
     @Override
-    public void update(Long aLong, Staff staff) throws DaoException {
+    public void update(Long aLong, Staff staff) throws RepositoryException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
@@ -81,10 +81,10 @@ public class StaffJdbc implements StaffRepository {
             statement.setLong(4, staff.getSalary());
             statement.setLong(5, aLong);
             if(statement.execute()){
-                throw new DaoException("Staff was not updated");
+                throw new RepositoryException("Staff was not updated");
             }
-        } catch (DaoException | SQLException e){
-            throw new DaoException(e.getMessage(),e);
+        } catch (RepositoryException | SQLException e){
+            throw new RepositoryException(e.getMessage(),e);
         } finally {
             try {
                 if(connection != null){
@@ -94,13 +94,13 @@ public class StaffJdbc implements StaffRepository {
                     statement.close();
                 }
             }catch (SQLException e){
-                throw new DaoException("Cannot close connection",e);
+                throw new RepositoryException("Cannot close connection",e);
             }
         }
     }
 
     @Override
-    public void delete(Long aLong) throws DaoException {
+    public void delete(Long aLong) throws RepositoryException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
@@ -108,10 +108,10 @@ public class StaffJdbc implements StaffRepository {
             statement = connection.prepareStatement(DELETE_STAFF);
             statement.setLong(1, aLong);
             if(statement.execute()){
-                throw new DaoException("Staff was not deleted");
+                throw new RepositoryException("Staff was not deleted");
             }
-        } catch (DaoException | SQLException e){
-            throw new DaoException(e.getMessage(),e);
+        } catch (RepositoryException | SQLException e){
+            throw new RepositoryException(e.getMessage(),e);
         } finally {
             try {
                 if(connection != null){
@@ -121,13 +121,13 @@ public class StaffJdbc implements StaffRepository {
                     statement.close();
                 }
             }catch (SQLException e){
-                throw new DaoException("Cannot close connection",e);
+                throw new RepositoryException("Cannot close connection",e);
             }
         }
     }
 
     @Override
-    public Optional<List<Staff>> findAll() throws DaoException {
+    public Optional<List<Staff>> findAll() throws RepositoryException {
         Connection connection = null;
         PreparedStatement statement = null;
         List<Staff> orderList;
@@ -135,8 +135,8 @@ public class StaffJdbc implements StaffRepository {
             connection = ConnectionFactory.getConnection();
             statement = connection.prepareStatement(FIND_STAFF);
             orderList = readDataFromResultSet(statement.executeQuery());
-        } catch (DaoException | SQLException e){
-            throw new DaoException(e.getMessage(),e);
+        } catch (RepositoryException | SQLException e){
+            throw new RepositoryException(e.getMessage(),e);
         } finally {
             try {
                 if(connection != null){
@@ -146,14 +146,14 @@ public class StaffJdbc implements StaffRepository {
                     statement.close();
                 }
             }catch (SQLException e){
-                throw new DaoException("Cannot close connection",e);
+                throw new RepositoryException("Cannot close connection",e);
             }
         }
         return Optional.of(orderList);
     }
 
     @Override
-    public Optional<List<Staff>> showStaffRelatedToSoftware(Long projectId) throws DaoException {
+    public Optional<List<Staff>> showStaffRelatedToSoftware(Long projectId) throws RepositoryException {
         Connection connection = null;
         PreparedStatement statement = null;
         List<Staff> orderList;
@@ -162,8 +162,8 @@ public class StaffJdbc implements StaffRepository {
             statement = connection.prepareStatement(FIND_STAFF_RELATED_TO_SOFTWARE);
             statement.setLong(1,projectId);
             orderList = readDataFromResultSet(statement.executeQuery());
-        } catch (DaoException | SQLException e){
-            throw new DaoException(e.getMessage(),e);
+        } catch (RepositoryException | SQLException e){
+            throw new RepositoryException(e.getMessage(),e);
         } finally {
             try {
                 if(connection != null){
@@ -173,13 +173,13 @@ public class StaffJdbc implements StaffRepository {
                     statement.close();
                 }
             }catch (SQLException e){
-                throw new DaoException("Cannot close connection",e);
+                throw new RepositoryException("Cannot close connection",e);
             }
         }
         return Optional.of(orderList);
     }
 
-    private List<Staff> readDataFromResultSet(ResultSet resultSet) throws DaoException {
+    private List<Staff> readDataFromResultSet(ResultSet resultSet) throws RepositoryException {
         List<Staff> orderList = new ArrayList<>();
         try {
             while(resultSet.next()){
@@ -192,7 +192,7 @@ public class StaffJdbc implements StaffRepository {
                 ));
             }
         } catch (SQLException e) {
-            throw new DaoException("Reading from result set is failed",e);
+            throw new RepositoryException("Reading from result set is failed",e);
         }
         return orderList;
     }

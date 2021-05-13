@@ -1,7 +1,7 @@
 package server.database.repository.jdbc;
 
 import server.database.repository.ConnectionFactory;
-import server.database.repository.DaoException;
+import server.database.repository.RepositoryException;
 import server.database.repository.SoftwareRepository;
 import server.database.domain.Software;
 import server.database.domain.Staff;
@@ -37,7 +37,7 @@ public class SoftwareJdbc implements SoftwareRepository {
             "where staff_software.staff_id = ?;";
 
     @Override
-    public void create(Software software) throws DaoException {
+    public void create(Software software) throws RepositoryException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
@@ -46,10 +46,10 @@ public class SoftwareJdbc implements SoftwareRepository {
             statement.setString(1, software.getName());
             statement.setString(2, software.getSoftwareType().name());
             if(statement.execute()){
-                throw new DaoException("Software was not created");
+                throw new RepositoryException("Software was not created");
             }
-        } catch (SQLException | DaoException e){
-            throw new DaoException(e.getMessage(),e);
+        } catch (SQLException | RepositoryException e){
+            throw new RepositoryException(e.getMessage(),e);
         } finally {
             try {
                 if(connection != null){
@@ -59,13 +59,13 @@ public class SoftwareJdbc implements SoftwareRepository {
                     statement.close();
                 }
             }catch (SQLException e){
-                throw new DaoException("Cannot close connection",e);
+                throw new RepositoryException("Cannot close connection",e);
             }
         }
     }
 
     @Override
-    public void update(Long aLong, Software software) throws DaoException {
+    public void update(Long aLong, Software software) throws RepositoryException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
@@ -75,10 +75,10 @@ public class SoftwareJdbc implements SoftwareRepository {
             statement.setString(2, software.getSoftwareType().name());
             statement.setLong(5, aLong);
             if(statement.execute()){
-                throw new DaoException("Order was not updated");
+                throw new RepositoryException("Order was not updated");
             }
-        } catch (DaoException | SQLException e){
-            throw new DaoException(e.getMessage(),e);
+        } catch (RepositoryException | SQLException e){
+            throw new RepositoryException(e.getMessage(),e);
         } finally {
             try {
                 if(connection != null){
@@ -88,13 +88,13 @@ public class SoftwareJdbc implements SoftwareRepository {
                     statement.close();
                 }
             }catch (SQLException e){
-                throw new DaoException("Cannot close connection",e);
+                throw new RepositoryException("Cannot close connection",e);
             }
         }
     }
 
     @Override
-    public void delete(Long aLong) throws DaoException {
+    public void delete(Long aLong) throws RepositoryException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
@@ -102,10 +102,10 @@ public class SoftwareJdbc implements SoftwareRepository {
             statement = connection.prepareStatement(DELETE_SOFTWARE);
             statement.setLong(1, aLong);
             if(statement.execute()){
-                throw new DaoException("Staff was not deleted");
+                throw new RepositoryException("Staff was not deleted");
             }
-        } catch (DaoException | SQLException e){
-            throw new DaoException(e.getMessage(),e);
+        } catch (RepositoryException | SQLException e){
+            throw new RepositoryException(e.getMessage(),e);
         } finally {
             try {
                 if(connection != null){
@@ -115,13 +115,13 @@ public class SoftwareJdbc implements SoftwareRepository {
                     statement.close();
                 }
             }catch (SQLException e){
-                throw new DaoException("Cannot close connection",e);
+                throw new RepositoryException("Cannot close connection",e);
             }
         }
     }
 
     @Override
-    public Optional<List<Software>> findAll() throws DaoException {
+    public Optional<List<Software>> findAll() throws RepositoryException {
         Connection connection = null;
         PreparedStatement statement = null;
         List<Software> softwares;
@@ -129,8 +129,8 @@ public class SoftwareJdbc implements SoftwareRepository {
             connection = ConnectionFactory.getConnection();
             statement = connection.prepareStatement(FIND_SOFTWARE);
             softwares = readDataFromResultSet(statement.executeQuery());
-        } catch (DaoException | SQLException e){
-            throw new DaoException(e.getMessage(),e);
+        } catch (RepositoryException | SQLException e){
+            throw new RepositoryException(e.getMessage(),e);
         } finally {
             try {
                 if(connection != null){
@@ -140,14 +140,14 @@ public class SoftwareJdbc implements SoftwareRepository {
                     statement.close();
                 }
             }catch (SQLException e){
-                throw new DaoException("Cannot close connection",e);
+                throw new RepositoryException("Cannot close connection",e);
             }
         }
         return Optional.of(softwares);
     }
 
     @Override
-    public void addStaffToProject(Staff staff, Software software) throws DaoException {
+    public void addStaffToProject(Staff staff, Software software) throws RepositoryException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
@@ -156,10 +156,10 @@ public class SoftwareJdbc implements SoftwareRepository {
             statement.setLong(1, staff.getId());
             statement.setLong(2, software.getId());
             if(statement.execute()){
-                throw new DaoException("Staff was not added to software");
+                throw new RepositoryException("Staff was not added to software");
             }
-        } catch (SQLException | DaoException e){
-            throw new DaoException(e.getMessage(),e);
+        } catch (SQLException | RepositoryException e){
+            throw new RepositoryException(e.getMessage(),e);
         } finally {
             try {
                 if(connection != null){
@@ -169,13 +169,13 @@ public class SoftwareJdbc implements SoftwareRepository {
                     statement.close();
                 }
             }catch (SQLException e){
-                throw new DaoException("Cannot close connection",e);
+                throw new RepositoryException("Cannot close connection",e);
             }
         }
     }
 
     @Override
-    public void removeStaffFromProject(Staff staff) throws DaoException {
+    public void removeStaffFromProject(Staff staff) throws RepositoryException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
@@ -183,10 +183,10 @@ public class SoftwareJdbc implements SoftwareRepository {
             statement = connection.prepareStatement(REMOVE_STAFF_FROM_SOFTWARE);
             statement.setLong(1, staff.getId());
             if(statement.execute()){
-                throw new DaoException("Staff was not removed from software");
+                throw new RepositoryException("Staff was not removed from software");
             }
-        } catch (DaoException | SQLException e){
-            throw new DaoException(e.getMessage(),e);
+        } catch (RepositoryException | SQLException e){
+            throw new RepositoryException(e.getMessage(),e);
         } finally {
             try {
                 if(connection != null){
@@ -196,13 +196,13 @@ public class SoftwareJdbc implements SoftwareRepository {
                     statement.close();
                 }
             }catch (SQLException e){
-                throw new DaoException("Cannot close connection",e);
+                throw new RepositoryException("Cannot close connection",e);
             }
         }
     }
 
     @Override
-    public Optional<List<Software>> showSoftwareRelatedToStaff(Long staffId) throws DaoException {
+    public Optional<List<Software>> showSoftwareRelatedToStaff(Long staffId) throws RepositoryException {
         Connection connection = null;
         PreparedStatement statement = null;
         List<Software> softwares;
@@ -211,8 +211,8 @@ public class SoftwareJdbc implements SoftwareRepository {
             statement = connection.prepareStatement(FIND_SOFTWARE_RELATED_TO_STAFF);
             statement.setLong(1,staffId);
             softwares = readDataFromResultSet(statement.executeQuery());
-        } catch (DaoException | SQLException e){
-            throw new DaoException(e.getMessage(),e);
+        } catch (RepositoryException | SQLException e){
+            throw new RepositoryException(e.getMessage(),e);
         } finally {
             try {
                 if(connection != null){
@@ -222,13 +222,13 @@ public class SoftwareJdbc implements SoftwareRepository {
                     statement.close();
                 }
             }catch (SQLException e){
-                throw new DaoException("Cannot close connection",e);
+                throw new RepositoryException("Cannot close connection",e);
             }
         }
         return Optional.of(softwares);
     }
 
-    private List<Software> readDataFromResultSet(ResultSet resultSet) throws DaoException {
+    private List<Software> readDataFromResultSet(ResultSet resultSet) throws RepositoryException {
         List<Software> softwareList = new ArrayList<>();
         try {
             while(resultSet.next()){
@@ -239,7 +239,7 @@ public class SoftwareJdbc implements SoftwareRepository {
                 ));
             }
         } catch (SQLException e) {
-            throw new DaoException("Reading from result set is failed",e);
+            throw new RepositoryException("Reading from result set is failed",e);
         }
         return softwareList;
     }

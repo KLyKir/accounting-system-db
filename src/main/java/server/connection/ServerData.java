@@ -1,6 +1,6 @@
 package server.connection;
 
-import server.database.repository.DaoException;
+import server.database.repository.RepositoryException;
 import server.database.repository.jdbc.SoftwareJdbc;
 import server.database.repository.jdbc.StaffJdbc;
 import server.database.domain.Software;
@@ -64,7 +64,7 @@ public class ServerData extends Thread{
                     String[] command = message.split(":");
                     chooseCommand(command);
                 }
-            } catch (NullPointerException ignored) {} catch (DaoException e) {
+            } catch (NullPointerException ignored) {} catch (RepositoryException e) {
                 e.printStackTrace();
             }
         } catch (IOException e) {
@@ -72,7 +72,7 @@ public class ServerData extends Thread{
         }
     }
 
-    private void chooseCommand(String[] command) throws DaoException {
+    private void chooseCommand(String[] command) throws RepositoryException {
         switch (command[0]){
             case "CREATE_STAFF":
                 createStaff(command);
@@ -95,12 +95,12 @@ public class ServerData extends Thread{
         }
     }
 
-    private void createStaff(String[] command) throws DaoException {
+    private void createStaff(String[] command) throws RepositoryException {
         new StaffJdbc().create(new Staff(command[1],command[2],Long.parseLong(command[3]),command[4]));
         sendMessageForUser("Staff was created");
     }
 
-    private void showStaff() throws DaoException {
+    private void showStaff() throws RepositoryException {
         List<Staff> staffList = new StaffJdbc().findAll().get();
         String message = staffList.stream()
                 .map(Staff::toString)
@@ -108,12 +108,12 @@ public class ServerData extends Thread{
         sendMessageForUser(message);
     }
 
-    private void createSoftware(String[] command) throws DaoException {
+    private void createSoftware(String[] command) throws RepositoryException {
         new SoftwareJdbc().create(new Software(command[1], SoftwareType.valueOf(command[2])));
         sendMessageForUser("Software was created");
     }
 
-    private void showSoftware() throws DaoException {
+    private void showSoftware() throws RepositoryException {
         List<Software> staffList = new SoftwareJdbc().findAll().get();
         String message = staffList.stream()
                 .map(Software::toString)
@@ -121,7 +121,7 @@ public class ServerData extends Thread{
         sendMessageForUser(message);
     }
 
-    private void addStaffToSoftware(String[] command) throws DaoException {
+    private void addStaffToSoftware(String[] command) throws RepositoryException {
         new SoftwareJdbc().addStaffToProject(
                 new Staff(Long.parseLong(command[1]),"","",1L,""),
                 new Software(Long.parseLong(command[2]),"",SoftwareType.API)
@@ -129,7 +129,7 @@ public class ServerData extends Thread{
         sendMessageForUser("Staff was added to software");
     }
 
-    private void showStaffRelatedToSoftware(String[] command) throws DaoException {
+    private void showStaffRelatedToSoftware(String[] command) throws RepositoryException {
         List<Staff> staffList = new StaffJdbc().showStaffRelatedToSoftware(Long.parseLong(command[1])).get();
         String message = staffList.stream()
                 .map(Staff::toString)

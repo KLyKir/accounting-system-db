@@ -6,5 +6,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface StaffRepository extends Repository<Staff, Long>{
-    Optional<List<Staff>> showStaffRelatedToSoftware(Long projectId) throws DaoException;
+    Optional<List<Staff>> showStaffRelatedToSoftware(Long projectId) throws RepositoryException;
 }

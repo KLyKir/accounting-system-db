@@ -25,8 +25,8 @@ public class ConnectionFactory {
         } catch (IOException exception) {
             exception.printStackTrace();
             try {
-                throw new DaoException("File " + propertiesFileName + " not found",exception);
-            } catch (DaoException e) {
+                throw new RepositoryException("File " + propertiesFileName + " not found",exception);
+            } catch (RepositoryException e) {
                 e.printStackTrace();
             }
         }
@@ -36,14 +36,14 @@ public class ConnectionFactory {
         PASSWORD = properties.getProperty("pg.password");
     }
 
-    public static Connection getConnection() throws DaoException {
+    public static Connection getConnection() throws RepositoryException {
 
         Connection connection;
         try {
             connection = DriverManager.getConnection(URL,USERNAME,PASSWORD);
         } catch (SQLException e){
             e.printStackTrace();
-            throw new DaoException("Connection is failed", e);
+            throw new RepositoryException("Connection is failed", e);
         }
 
         return connection;
