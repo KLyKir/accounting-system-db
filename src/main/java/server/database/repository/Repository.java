@@ -1,4 +1,4 @@
-package server.database.dao;
+package server.database.repository;
 
 import java.util.List;
 import java.util.Optional;

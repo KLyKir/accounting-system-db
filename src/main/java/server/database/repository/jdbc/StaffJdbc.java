@@ -1,8 +1,8 @@
-package server.database.dao.jdbc;
+package server.database.repository.jdbc;
 
-import server.database.dao.ConnectionFactory;
-import server.database.dao.DaoException;
-import server.database.dao.StaffRepository;
+import server.database.repository.ConnectionFactory;
+import server.database.repository.DaoException;
+import server.database.repository.StaffRepository;
 import server.database.domain.Staff;
 
 import java.sql.Connection;

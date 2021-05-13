@@ -1,8 +1,8 @@
 package server.connection;
 
-import server.database.dao.DaoException;
-import server.database.dao.jdbc.SoftwareJdbc;
-import server.database.dao.jdbc.StaffJdbc;
+import server.database.repository.DaoException;
+import server.database.repository.jdbc.SoftwareJdbc;
+import server.database.repository.jdbc.StaffJdbc;
 import server.database.domain.Software;
 import server.database.domain.Staff;
 import server.database.domain.enums.SoftwareType;

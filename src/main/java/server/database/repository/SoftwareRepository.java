@@ -1,4 +1,4 @@
-package server.database.dao;
+package server.database.repository;
 
 import server.database.domain.Software;
 import server.database.domain.Staff;

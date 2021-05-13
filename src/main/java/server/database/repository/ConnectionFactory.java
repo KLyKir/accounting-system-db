@@ -1,4 +1,4 @@
-package server.database.dao;
+package server.database.repository;
 
 import java.io.FileInputStream;
 import java.io.IOException;
