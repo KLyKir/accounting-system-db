@@ -1,23 +1,21 @@
-package server.database.connection.domain;
+package server.database.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import server.database.domain.enums.SoftwareType;
 
 
 @Data
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class Staff {
+public class Software {
+
     private Long id;
 
     @NonNull
     private String name;
     @NonNull
-    private String surname;
-    @NonNull
-    private Long salary;
-    @NonNull
-    private String workPosition;
+    private SoftwareType softwareType;
 }

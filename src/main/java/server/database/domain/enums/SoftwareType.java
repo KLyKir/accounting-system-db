@@ -1,4 +1,4 @@
-package server.database.connection.domain.enums;
+package server.database.domain.enums;
 
 import lombok.Getter;
 

@@ -1,9 +1,9 @@
 package start.point;
 
 import server.connection.TcpConnection;
-import server.database.connection.domain.User;
-import server.database.connection.domain.enums.AccessLevel;
-import server.database.connection.redis.RedisConnection;
+import server.database.domain.User;
+import server.database.domain.enums.AccessLevel;
+import server.database.redis.RedisConnection;
 
 import java.io.IOException;
 

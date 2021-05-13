@@ -1,7 +1,7 @@
-package server.database.connection.dao;
+package server.database.dao;
 
-import server.database.connection.domain.Software;
-import server.database.connection.domain.Staff;
+import server.database.domain.Software;
+import server.database.domain.Staff;
 
 import java.util.List;
 import java.util.Optional;

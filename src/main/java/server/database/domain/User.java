@@ -1,8 +1,8 @@
-package server.database.connection.domain;
+package server.database.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import server.database.connection.domain.enums.AccessLevel;
+import server.database.domain.enums.AccessLevel;
 
 import java.io.Serializable;
 

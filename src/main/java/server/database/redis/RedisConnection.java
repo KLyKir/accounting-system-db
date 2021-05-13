@@ -1,7 +1,7 @@
-package server.database.connection.redis;
+package server.database.redis;
 
 import redis.clients.jedis.Jedis;
-import server.database.connection.domain.User;
+import server.database.domain.User;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

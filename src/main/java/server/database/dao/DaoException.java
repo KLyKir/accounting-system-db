@@ -1,4 +1,4 @@
-package server.database.connection.dao;
+package server.database.dao;
 
 import java.util.concurrent.ExecutionException;
 

@@ -1,12 +1,12 @@
 package server.connection;
 
-import server.database.connection.dao.DaoException;
-import server.database.connection.dao.jdbc.SoftwareJdbc;
-import server.database.connection.dao.jdbc.StaffJdbc;
-import server.database.connection.domain.Software;
-import server.database.connection.domain.Staff;
-import server.database.connection.domain.enums.SoftwareType;
-import server.database.connection.redis.RedisConnection;
+import server.database.dao.DaoException;
+import server.database.dao.jdbc.SoftwareJdbc;
+import server.database.dao.jdbc.StaffJdbc;
+import server.database.domain.Software;
+import server.database.domain.Staff;
+import server.database.domain.enums.SoftwareType;
+import server.database.redis.RedisConnection;
 
 import java.io.*;
 import java.net.Socket;
