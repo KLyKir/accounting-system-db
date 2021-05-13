@@ -1,0 +1,3 @@
+# Project exclude paths
+/target/
+/user-defined-db-client/target/
