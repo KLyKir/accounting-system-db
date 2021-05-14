@@ -12,8 +12,8 @@ public class Main {
     //adding default test users
     static {
         RedisConnection redisConnection = RedisConnection.getInstance("localhost",6379);
-        redisConnection.put(new User("User1234","1234", AccessLevel.READ_ONLY));
-        redisConnection.put(new User("User12345","12345", AccessLevel.READ_AND_WRITE));
+        redisConnection.put(new User("SomeUser_WithLowPriority","password", AccessLevel.READ_ONLY));
+        redisConnection.put(new User("SomeUser_WithHighPriority","password", AccessLevel.READ_AND_WRITE));
     }
 
     public static void main(String[] args) throws IOException {

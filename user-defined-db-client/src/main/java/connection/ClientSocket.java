@@ -30,9 +30,8 @@ public class ClientSocket extends Thread{
         while(true){
             message = readFromSocket.readLine();
             String[] splitMessage = message.split(":");
-            System.out.println(splitMessage.length);
             message = splitMessage[1];
-            String[] showSplit = message.split("|");
+            String[] showSplit = message.split("/");
             if(showSplit.length > 1){
                 Arrays.stream(showSplit).forEach(System.out::println);
             } else {

@@ -18,6 +18,4 @@ public class Staff {
     private String surname;
     @NonNull
     private Long salary;
-    @NonNull
-    private String workPosition;
 }

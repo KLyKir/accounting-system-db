@@ -4,18 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import server.database.domain.enums.SoftwareType;
-
 
 @Data
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class Software {
-
+public class Invoice {
     private Long id;
-
     @NonNull
-    private String name;
+    private String orderName;
     @NonNull
-    private SoftwareType softwareType;
+    private Long price;
 }

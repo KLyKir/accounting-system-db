@@ -14,28 +14,26 @@ import java.util.List;
 import java.util.Optional;
 
 public class StaffJdbc implements StaffRepository {
-    private static final String CREATE_STAFF = "insert into software_company.staff(name,surname,salary,work_position) values(?,?,?,?);";
+    private static final String CREATE_STAFF = "insert into accounting_company.staff(name,surname,salary) values(?,?,?);";
 
-    private static final String DELETE_STAFF = "delete from software_company.staff " +
+    private static final String DELETE_STAFF = "delete from accounting_company.staff " +
             "where id = ?;";
 
-    private static final String UPDATE_STAFF = "update software_company.staff set " +
+    private static final String UPDATE_STAFF = "update accounting_company.staff set " +
             "name = ?," +
             "surname = ?," +
-            "salary = ?," +
-            "work_position = ?" +
+            "salary = ?" +
             "where id = ?;";
 
-    private static final String FIND_STAFF = "select * from software_company.staff;";
+    private static final String FIND_STAFF = "select * from accounting_company.staff;";
 
     private static final String FIND_STAFF_RELATED_TO_SOFTWARE = "select id," +
             "       name," +
             "       surname," +
-            "       salary," +
-            "       work_position " +
-            "from software_company.staff_software " +
-            "         inner join software_company.staff s on s.id = staff_software.staff_id " +
-            "where staff_software.software_id = ?;";
+            "       salary " +
+            "from accounting_company.staff_software " +
+            "         inner join accounting_company.staff s on s.id = staff_invoice.staff_id " +
+            "where staff_invoice.software_id = ?;";
 
 
     @Override
@@ -48,7 +46,6 @@ public class StaffJdbc implements StaffRepository {
             statement.setString(1, staff.getName());
             statement.setString(2, staff.getSurname());
             statement.setLong(3, staff.getSalary());
-            statement.setString(4, staff.getWorkPosition());
             if(statement.execute()){
                 throw new RepositoryException("Staff was not created");
             }
@@ -77,9 +74,8 @@ public class StaffJdbc implements StaffRepository {
             statement = connection.prepareStatement(UPDATE_STAFF);
             statement.setString(1, staff.getName());
             statement.setString(2, staff.getSurname());
-            statement.setString(3, staff.getWorkPosition());
-            statement.setLong(4, staff.getSalary());
-            statement.setLong(5, aLong);
+            statement.setLong(3, staff.getSalary());
+            statement.setLong(4, aLong);
             if(statement.execute()){
                 throw new RepositoryException("Staff was not updated");
             }
@@ -187,8 +183,7 @@ public class StaffJdbc implements StaffRepository {
                         resultSet.getLong("id"),
                         resultSet.getString("name"),
                         resultSet.getString("surname"),
-                        resultSet.getLong("salary"),
-                        resultSet.getString("work_position")
+                        resultSet.getLong("salary")
                 ));
             }
         } catch (SQLException e) {

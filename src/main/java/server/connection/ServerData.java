@@ -1,11 +1,10 @@
 package server.connection;
 
+import server.database.domain.Invoice;
 import server.database.repository.RepositoryException;
-import server.database.repository.jdbc.SoftwareJdbc;
+import server.database.repository.jdbc.InvoiceJdbc;
 import server.database.repository.jdbc.StaffJdbc;
-import server.database.domain.Software;
 import server.database.domain.Staff;
-import server.database.domain.enums.SoftwareType;
 import server.database.redis.RedisConnection;
 
 import java.io.*;
@@ -80,16 +79,16 @@ public class ServerData extends Thread{
             case "SHOW_STAFF":
                 showStaff();
                 break;
-            case "CREATE_SOFTWARE":
+            case "CREATE_INVOICE":
                 createSoftware(command);
                 break;
-            case "SHOW_SOFTWARE":
+            case "SHOW_INVOICE":
                 showSoftware();
                 break;
-            case "ADD_STAFF_TO_SOFTWARE":
+            case "ADD_STAFF_TO_INVOICE":
                 addStaffToSoftware(command);
                 break;
-            case "SHOW_STAFF_RELATED_TO_SOFTWARE":
+            case "SHOW_STAFF_RELATED_TO_INVOICE":
                 showStaffRelatedToSoftware(command);
                 break;
         }
@@ -104,36 +103,36 @@ public class ServerData extends Thread{
         List<Staff> staffList = new StaffJdbc().findAll().get();
         String message = staffList.stream()
                 .map(Staff::toString)
-                .collect(Collectors.joining("\n"));
+                .collect(Collectors.joining("/"));
         sendMessageForUser(message);
     }
 
     private void createSoftware(String[] command) throws RepositoryException {
-        new SoftwareJdbc().create(new Software(command[1], SoftwareType.valueOf(command[2])));
-        sendMessageForUser("Software was created");
+        new InvoiceJdbc().create(new Invoice(command[1], Long.parseLong(command[2])));
+        sendMessageForUser("Invoice was created");
     }
 
     private void showSoftware() throws RepositoryException {
-        List<Software> staffList = new SoftwareJdbc().findAll().get();
-        String message = staffList.stream()
-                .map(Software::toString)
-                .collect(Collectors.joining("|"));
+        List<Invoice> invoiceList = new InvoiceJdbc().findAll().get();
+        String message = invoiceList.stream()
+                .map(Invoice::toString)
+                .collect(Collectors.joining("/"));
         sendMessageForUser(message);
     }
 
     private void addStaffToSoftware(String[] command) throws RepositoryException {
-        new SoftwareJdbc().addStaffToProject(
+        new InvoiceJdbc().addStaffToProject(
                 new Staff(Long.parseLong(command[1]),"","",1L,""),
-                new Software(Long.parseLong(command[2]),"",SoftwareType.API)
+                new Invoice(Long.parseLong(command[2]),"",100L)
                 );
-        sendMessageForUser("Staff was added to software");
+        sendMessageForUser("Staff was added to Invoice");
     }
 
     private void showStaffRelatedToSoftware(String[] command) throws RepositoryException {
         List<Staff> staffList = new StaffJdbc().showStaffRelatedToSoftware(Long.parseLong(command[1])).get();
         String message = staffList.stream()
                 .map(Staff::toString)
-                .collect(Collectors.joining("|"));
+                .collect(Collectors.joining("/"));
         sendMessageForUser(message);
     }
 

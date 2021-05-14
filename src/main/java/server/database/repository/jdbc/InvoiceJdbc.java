@@ -1,11 +1,10 @@
 package server.database.repository.jdbc;
 
+import server.database.domain.Invoice;
 import server.database.repository.ConnectionFactory;
 import server.database.repository.RepositoryException;
-import server.database.repository.SoftwareRepository;
-import server.database.domain.Software;
+import server.database.repository.InvoiceRepository;
 import server.database.domain.Staff;
-import server.database.domain.enums.SoftwareType;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,38 +14,38 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class SoftwareJdbc implements SoftwareRepository {
-    private static final String CREATE_SOFTWARE = "insert into software_company.software(name,software_type) values(?,?);";
+public class InvoiceJdbc implements InvoiceRepository {
+    private static final String CREATE_INVOICE = "insert into accounting_company.invoice(order,price) values(?,?);";
 
-    private static final String DELETE_SOFTWARE = "delete from software_company.software " +
+    private static final String DELETE_INVOICE = "delete from accounting_company.invoice " +
             "where id = ?;";
 
-    private static final String UPDATE_SOFTWARE = "update software_company.software set " +
-            "name = ?," +
-            "software_type = ?," +
+    private static final String UPDATE_INVOICE = "update accounting_company.invoice set " +
+            "order_name = ?," +
+            "price = ?" +
             "where id = ?;";
 
-    private static final String FIND_SOFTWARE = "select * from software_company.software;";
-    private static final String ADD_STAFF_TO_SOFTWARE = "insert into software_company.staff_software(staff_id, software_id) values (?,?);";
-    private static final String REMOVE_STAFF_FROM_SOFTWARE = "delete from software_company.staff_software where staff_id = ?;";
-    private static final String FIND_SOFTWARE_RELATED_TO_STAFF = "select id," +
-            "       name," +
-            "       software_type " +
-            "from software_company.staff_software " +
-            "inner join software_company.software s on s.id = staff_software.software_id " +
-            "where staff_software.staff_id = ?;";
+    private static final String FIND_INVOICE = "select * from accounting_company.invoice;";
+    private static final String ADD_STAFF_TO_INVOICE = "insert into accounting_company.staff_invoice(staff_id, invoice_id) values (?,?);";
+    private static final String REMOVE_STAFF_FROM_INVOICE = "delete from accounting_company.staff_invoice where staff_id = ?;";
+    private static final String FIND_INVOICE_RELATED_TO_STAFF = "select id, " +
+            "       order_name, " +
+            "       price " +
+            "from accounting_company.staff_invoice " +
+            "         inner join accounting_company.invoice i on i.id = staff_invoice.invoice_id " +
+            "where staff_invoice.staff_id = ?";
 
     @Override
-    public void create(Software software) throws RepositoryException {
+    public void create(Invoice invoice) throws RepositoryException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
             connection = ConnectionFactory.getConnection();
-            statement = connection.prepareStatement(CREATE_SOFTWARE);
-            statement.setString(1, software.getName());
-            statement.setString(2, software.getSoftwareType().name());
+            statement = connection.prepareStatement(CREATE_INVOICE);
+            statement.setString(1, invoice.getOrderName());
+            statement.setLong(2, invoice.getPrice());
             if(statement.execute()){
-                throw new RepositoryException("Software was not created");
+                throw new RepositoryException("Invoice was not created");
             }
         } catch (SQLException | RepositoryException e){
             throw new RepositoryException(e.getMessage(),e);
@@ -65,17 +64,17 @@ public class SoftwareJdbc implements SoftwareRepository {
     }
 
     @Override
-    public void update(Long aLong, Software software) throws RepositoryException {
+    public void update(Long aLong, Invoice invoice) throws RepositoryException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
             connection = ConnectionFactory.getConnection();
-            statement = connection.prepareStatement(UPDATE_SOFTWARE);
-            statement.setString(1, software.getName());
-            statement.setString(2, software.getSoftwareType().name());
-            statement.setLong(5, aLong);
+            statement = connection.prepareStatement(UPDATE_INVOICE);
+            statement.setString(1, invoice.getOrderName());
+            statement.setLong(2, invoice.getPrice());
+            statement.setLong(3, aLong);
             if(statement.execute()){
-                throw new RepositoryException("Order was not updated");
+                throw new RepositoryException("Invoice was not updated");
             }
         } catch (RepositoryException | SQLException e){
             throw new RepositoryException(e.getMessage(),e);
@@ -99,10 +98,10 @@ public class SoftwareJdbc implements SoftwareRepository {
         PreparedStatement statement = null;
         try {
             connection = ConnectionFactory.getConnection();
-            statement = connection.prepareStatement(DELETE_SOFTWARE);
+            statement = connection.prepareStatement(DELETE_INVOICE);
             statement.setLong(1, aLong);
             if(statement.execute()){
-                throw new RepositoryException("Staff was not deleted");
+                throw new RepositoryException("Invoice was not deleted");
             }
         } catch (RepositoryException | SQLException e){
             throw new RepositoryException(e.getMessage(),e);
@@ -121,13 +120,13 @@ public class SoftwareJdbc implements SoftwareRepository {
     }
 
     @Override
-    public Optional<List<Software>> findAll() throws RepositoryException {
+    public Optional<List<Invoice>> findAll() throws RepositoryException {
         Connection connection = null;
         PreparedStatement statement = null;
-        List<Software> softwares;
+        List<Invoice> softwares;
         try {
             connection = ConnectionFactory.getConnection();
-            statement = connection.prepareStatement(FIND_SOFTWARE);
+            statement = connection.prepareStatement(FIND_INVOICE);
             softwares = readDataFromResultSet(statement.executeQuery());
         } catch (RepositoryException | SQLException e){
             throw new RepositoryException(e.getMessage(),e);
@@ -147,16 +146,16 @@ public class SoftwareJdbc implements SoftwareRepository {
     }
 
     @Override
-    public void addStaffToProject(Staff staff, Software software) throws RepositoryException {
+    public void addStaffToProject(Staff staff, Invoice invoice) throws RepositoryException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
             connection = ConnectionFactory.getConnection();
-            statement = connection.prepareStatement(ADD_STAFF_TO_SOFTWARE);
+            statement = connection.prepareStatement(ADD_STAFF_TO_INVOICE);
             statement.setLong(1, staff.getId());
-            statement.setLong(2, software.getId());
+            statement.setLong(2, invoice.getId());
             if(statement.execute()){
-                throw new RepositoryException("Staff was not added to software");
+                throw new RepositoryException("Staff was not added to Invoice");
             }
         } catch (SQLException | RepositoryException e){
             throw new RepositoryException(e.getMessage(),e);
@@ -180,10 +179,10 @@ public class SoftwareJdbc implements SoftwareRepository {
         PreparedStatement statement = null;
         try {
             connection = ConnectionFactory.getConnection();
-            statement = connection.prepareStatement(REMOVE_STAFF_FROM_SOFTWARE);
+            statement = connection.prepareStatement(REMOVE_STAFF_FROM_INVOICE);
             statement.setLong(1, staff.getId());
             if(statement.execute()){
-                throw new RepositoryException("Staff was not removed from software");
+                throw new RepositoryException("Staff was not removed from Invoice");
             }
         } catch (RepositoryException | SQLException e){
             throw new RepositoryException(e.getMessage(),e);
@@ -202,13 +201,13 @@ public class SoftwareJdbc implements SoftwareRepository {
     }
 
     @Override
-    public Optional<List<Software>> showSoftwareRelatedToStaff(Long staffId) throws RepositoryException {
+    public Optional<List<Invoice>> showSoftwareRelatedToStaff(Long staffId) throws RepositoryException {
         Connection connection = null;
         PreparedStatement statement = null;
-        List<Software> softwares;
+        List<Invoice> softwares;
         try {
             connection = ConnectionFactory.getConnection();
-            statement = connection.prepareStatement(FIND_SOFTWARE_RELATED_TO_STAFF);
+            statement = connection.prepareStatement(FIND_INVOICE_RELATED_TO_STAFF);
             statement.setLong(1,staffId);
             softwares = readDataFromResultSet(statement.executeQuery());
         } catch (RepositoryException | SQLException e){
@@ -228,14 +227,14 @@ public class SoftwareJdbc implements SoftwareRepository {
         return Optional.of(softwares);
     }
 
-    private List<Software> readDataFromResultSet(ResultSet resultSet) throws RepositoryException {
-        List<Software> softwareList = new ArrayList<>();
+    private List<Invoice> readDataFromResultSet(ResultSet resultSet) throws RepositoryException {
+        List<Invoice> softwareList = new ArrayList<>();
         try {
             while(resultSet.next()){
-                softwareList.add(new Software(
+                softwareList.add(new Invoice(
                         resultSet.getLong("id"),
-                        resultSet.getString("name"),
-                        SoftwareType.valueOf(resultSet.getString("software_type"))
+                        resultSet.getString("order"),
+                        resultSet.getLong("price")
                 ));
             }
         } catch (SQLException e) {

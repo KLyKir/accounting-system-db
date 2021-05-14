@@ -40,6 +40,7 @@ public class UserConsole extends Thread{
         }
 
         while(true){
+            Thread.sleep(1000);
             if(clientSocket.getAccessLvl().equals("READ_AND_WRITE")){
                 optionListWithHighPriority();
                 chooseOptionHighPriority();
@@ -53,18 +54,18 @@ public class UserConsole extends Thread{
     private void optionListWithHighPriority(){
         System.out.println("" +
                 "1 - Create staff\n" +
-                "2 - Create software\n" +
+                "2 - Create invoice\n" +
                 "3 - Show staff\n" +
-                "4 - Show software\n" +
-                "5 - Add staff to software\n" +
-                "6 - Show staff related to software\n");
+                "4 - Show invoice\n" +
+                "5 - Add staff to invoice\n" +
+                "6 - Show staff related to invoice\n");
     }
 
     private void optionListWithLowPriority(){
         System.out.println("" +
                 "1 - Show staff\n" +
-                "2 - Show software\n" +
-                "3 - Show staff related to software\n");
+                "2 - Show invoice\n" +
+                "3 - Show staff related to invoice\n");
     }
 
     private void chooseOptionHighPriority(){
@@ -78,12 +79,10 @@ public class UserConsole extends Thread{
                 message += scanner.nextLine() + ":";
                 System.out.println("Enter salary");
                 message += scanner.nextLine() + ":";
-                System.out.println("Enter work position");
-                message += scanner.nextLine();
                 clientSocket.send(message);
                 break;
             case 2:
-                message = "CREATE_SOFTWARE:";
+                message = "CREATE_INVOICE:";
                 System.out.println("Enter name");
                 message += scanner.nextLine() + ":";
                 System.out.println("Enter type");
@@ -94,19 +93,19 @@ public class UserConsole extends Thread{
                 clientSocket.send("SHOW_STAFF:");
                 break;
             case 4:
-                clientSocket.send("SHOW_SOFTWARE:");
+                clientSocket.send("SHOW_INVOICE:");
                 break;
             case 5:
                 message = "ADD_STAFF_TO_SOFTWARE:";
                 System.out.println("Enter staff id ");
                 message += scanner.nextLine() + ":";
-                System.out.println("Enter software id");
+                System.out.println("Enter invoice id");
                 message += scanner.nextLine();
                 clientSocket.send(message);
                 break;
             case 6:
-                message = "SHOW_STAFF_RELATED_TO_SOFTWARE:";
-                System.out.println("Enter software id ");
+                message = "SHOW_STAFF_RELATED_TO_INVOICE:";
+                System.out.println("Enter invoice id ");
                 message += scanner.nextLine();
                 clientSocket.send(message);
                 break;
@@ -121,11 +120,11 @@ public class UserConsole extends Thread{
                 clientSocket.send("SHOW_STAFF:");
                 break;
             case 2:
-                clientSocket.send("SHOW_SOFTWARE:");
+                clientSocket.send("SHOW_INVOICE:");
                 break;
             case 3:
-                String message = "SHOW_STAFF_RELATED_TO_SOFTWARE:";
-                System.out.println("Enter software id ");
+                String message = "SHOW_STAFF_RELATED_TO_INVOICE:";
+                System.out.println("Enter invoice id ");
                 message += scanner.nextLine();
                 clientSocket.send(message);
                 break;
